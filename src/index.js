@@ -1,5 +1,6 @@
-const { app, BrowserWindow, globalShortcut, shell } = require('electron')
+const { app, BrowserWindow, globalShortcut, shell, BrowserView, ipcMain, BaseWindow, WebContentsView } = require('electron')
 const path = require('node:path')
+const _ = require('lodash')
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -7,30 +8,66 @@ if (require('electron-squirrel-startup')) {
 }
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+
+  const mainWindow = new BaseWindow({
     width: 1100,
     height: 800,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-    },
+    y: 60,
     icon: './images/icon.ico',
   })
 
-  mainWindow.setMenuBarVisibility(false);
-  mainWindow.loadURL('https://gpt-group.doveaz.xyz:1443/')
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
-    return { action: 'deny' };
-  });
+  const tabContentsView = new WebContentsView({
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  })
+  mainWindow.contentView.addChildView(tabContentsView)
+  tabContentsView.setBounds({ x: 0, y: 0, width: 1100, height: 37 })
+  // tabContentsView.webContents.loadFile('src/tab.html')
+  tabContentsView.webContents.loadURL('https://gpt-group.doveaz.xyz:1443/index2.html')
+
+  // const view = new BrowserView()
+  // mainWindow.addBrowserView(view)
+  // view.setBounds({ x: 0, y: 0, width: 1100, height: 37 })
+  //
+  // view.webContents.loadFile('src/tab.html')
+
+  const views = {}
+
+  ipcMain.on('change-tab', (event, url) => {
+    if (views[url]) {
+      // mainWindow.setTopBrowserView(views[url])
+      _.forEach(views,view=>{
+          view.setVisible(false)
+      })
+      views[url].setVisible(true)
+    } else {
+      const view = new WebContentsView()
+      mainWindow.contentView.addChildView(view)
+      view.setBounds({ x: 0, y: 37, width: 1100, height: 763 })
+      view.webContents.loadURL(url)
+      // mainWindow.setTopBrowserView(view)
+      views[url] = view
+    }
+  })
+
+
+  mainWindow.setMenuBarVisibility(false)
+  // mainWindow.loadURL('https://gpt-group.doveaz.xyz:1443/')
+  // mainWindow.loadURL('https://chat.deepseek.com/')
+  // mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+  //   shell.openExternal(url);
+  //   return { action: 'deny' };
+  // });
 
   globalShortcut.register('alt+S', () => {
     if (mainWindow.isVisible() && mainWindow.isFocused()) {
       // 如果窗口在最前并且已被聚焦，则隐藏窗口
-      mainWindow.hide();
+      mainWindow.hide()
     } else {
       // 否则，显示并聚焦窗口
-      mainWindow.show();
-      mainWindow.focus();
+      mainWindow.show()
+      mainWindow.focus()
     }
   })
 

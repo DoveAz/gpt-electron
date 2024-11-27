@@ -1,10 +1,11 @@
 {
   "name": "gpt-group",
   "productName": "gpt-group",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {
+    "dev": "electron-forge dev",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
@@ -29,6 +30,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1"
+    "electron-squirrel-startup": "^1.0.1",
+    "lodash": "^4.17.21"
   }
 }
