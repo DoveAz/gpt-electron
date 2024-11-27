@@ -1,11 +1,10 @@
 {
   "name": "gpt-group",
   "productName": "gpt-group",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {
-    "dev": "electron-forge dev",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",

@@ -1,4 +1,13 @@
-const { app, BrowserWindow, globalShortcut, shell, BrowserView, ipcMain, BaseWindow, WebContentsView } = require('electron')
+const {
+  app,
+  BrowserWindow,
+  globalShortcut,
+  shell,
+  BrowserView,
+  ipcMain,
+  BaseWindow,
+  WebContentsView,
+} = require('electron')
 const path = require('node:path')
 const _ = require('lodash')
 
@@ -34,17 +43,25 @@ const createWindow = () => {
 
   const views = {}
 
+  mainWindow.on('resize', () => {
+    const { width, height } = mainWindow.getContentBounds()
+    _.forEach(views, view => {
+      view.setBounds({ x: 0, y: 37, width, height: height - 37  })
+    })
+  })
+
   ipcMain.on('change-tab', (event, url) => {
     if (views[url]) {
       // mainWindow.setTopBrowserView(views[url])
-      _.forEach(views,view=>{
-          view.setVisible(false)
+      _.forEach(views, view => {
+        view.setVisible(false)
       })
       views[url].setVisible(true)
     } else {
       const view = new WebContentsView()
       mainWindow.contentView.addChildView(view)
-      view.setBounds({ x: 0, y: 37, width: 1100, height: 763 })
+      const { width, height } = mainWindow.getContentBounds()
+      view.setBounds({ x: 0, y: 37, width, height: height - 37 })
       view.webContents.loadURL(url)
       // mainWindow.setTopBrowserView(view)
       views[url] = view
