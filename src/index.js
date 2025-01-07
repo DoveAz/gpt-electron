@@ -28,6 +28,7 @@ const createWindow = () => {
   const tabContentsView = new WebContentsView({
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      backgroundThrottling: false, // 禁用背景节流
     },
   })
   mainWindow.contentView.addChildView(tabContentsView)
@@ -84,7 +85,6 @@ const createWindow = () => {
     } else {
       // 否则，显示并聚焦窗口
       mainWindow.show()
-      mainWindow.setSize(mainWindow.getSize()[0] + 1, mainWindow.getSize()[1]);
       mainWindow.focus()
     }
   })
