@@ -51,22 +51,13 @@ const createWindow = () => {
     })
   })
 
+  const view = new WebContentsView()
+  mainWindow.contentView.addChildView(view)
+  const { width, height } = mainWindow.getContentBounds()
+  view.setBounds({ x: 0, y: 37, width, height: height - 37 })
+
   ipcMain.on('change-tab', (event, url) => {
-    if (views[url]) {
-      // mainWindow.setTopBrowserView(views[url])
-      _.forEach(views, view => {
-        view.setVisible(false)
-      })
-      views[url].setVisible(true)
-    } else {
-      const view = new WebContentsView()
-      mainWindow.contentView.addChildView(view)
-      const { width, height } = mainWindow.getContentBounds()
-      view.setBounds({ x: 0, y: 37, width, height: height - 37 })
-      view.webContents.loadURL(url)
-      // mainWindow.setTopBrowserView(view)
-      views[url] = view
-    }
+    view.webContents.loadURL(url)
   })
 
 
