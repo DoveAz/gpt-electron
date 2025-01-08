@@ -33,8 +33,8 @@ const createWindow = () => {
   })
   mainWindow.contentView.addChildView(tabContentsView)
   tabContentsView.setBounds({ x: 0, y: 0, width: 1100, height: 37 })
-  // tabContentsView.webContents.loadFile('src/tab.html')
-  tabContentsView.webContents.loadURL('https://gpt-group.doveaz.xyz:1443/index2.html')
+  tabContentsView.webContents.loadFile('src/tab.html')
+  // tabContentsView.webContents.loadURL('https://gpt-group.doveaz.xyz:1443/index2.html')
 
   // const view = new BrowserView()
   // mainWindow.addBrowserView(view)

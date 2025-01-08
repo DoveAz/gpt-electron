@@ -25,11 +25,11 @@
 <body>
 <div id="app" class="flex flex-col overflow-hidden">
   <nav class="flex">
-    <div class="p-4 cursor-pointer" v-for="item in list" :key="item.name" @click="active = item.name" :class="{
+    <div class="px-4 py-2 cursor-pointer" v-for="item in list" :key="item.name" @click="active = item.name" :class="{
         'text-blue-600' : active === item.name
-      }">{{item.name}}
-    </div>
+      }">{{item.name}}</div>
   </nav>
+
 </div>
 <script>
   const { createApp, ref, watchEffect } = Vue
@@ -49,18 +49,26 @@
           name: 'deepseek',
           url: 'https://chat.deepseek.com/'
         },
+        {
+          name: 'chatgpt',
+          url: 'https://chatgpt.com/'
+        },
+        {
+          name: '文心一言',
+          url: 'https://yiyan.baidu.com/'
+        },
       ])
-      const active = useStorage('active-model', '豆包')
+      const active = useStorage('active-model', 'deepseek')
       watchEffect(() => {
         const matchedUrl = list.value.find(item => item.name === active.value)?.url
         if (matchedUrl) {
-          window.electronAPI.changeTab(matchedUrl)
+          window.electronAPI?.changeTab(matchedUrl)
         }
       })
       return {
-        list, active,
+        list, active
       }
-    },
+    }
   }).mount('#app')
 </script>
 </body>
