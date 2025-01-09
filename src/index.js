@@ -42,16 +42,14 @@ const createWindow = () => {
   //
   // view.webContents.loadFile('src/tab.html')
 
-  const views = {}
+
+  const view = new WebContentsView()
 
   mainWindow.on('resize', () => {
     const { width, height } = mainWindow.getContentBounds()
-    _.forEach(views, view => {
-      view.setBounds({ x: 0, y: 37, width, height: height - 37  })
-    })
+    view.setBounds({ x: 0, y: 37, width, height: height - 37 })
   })
 
-  const view = new WebContentsView()
   mainWindow.contentView.addChildView(view)
   const { width, height } = mainWindow.getContentBounds()
   view.setBounds({ x: 0, y: 37, width, height: height - 37 })
